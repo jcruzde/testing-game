@@ -386,6 +386,9 @@ const btnEnviarApuesta = document.getElementById("btnEnviarApuesta");
 const btnRevelarPrecio = document.getElementById("btnRevelarPrecio");
 const btnSiguienteRonda = document.getElementById("btnSiguienteRonda");
 
+const configHost = document.getElementById("configHost");
+const inputNumeroRondas = document.getElementById("inputNumeroRondas");
+
 const codigoSala = document.getElementById("codigoSala");
 const listaJugadores = document.getElementById("listaJugadores");
 const textoRonda = document.getElementById("textoRonda");
@@ -453,6 +456,7 @@ btnCrearPartida.addEventListener("click", async () => {
   const nuevaPartida = {
     estado: "esperando",
     rondaActual: 0,
+    numeroRondas: 10,
     revelado: false,
     creada: Date.now(),
     hostId: jugadorId,
@@ -558,16 +562,32 @@ function pintarSala() {
   });
 
   if (soyHost) {
-    mostrar(btnEmpezarPartida);
+    mostrar(configHost);
+    inputNumeroRondas.max = casas.length;
+
+    if (!inputNumeroRondas.value) {
+      inputNumeroRondas.value = Math.min(10, casas.length);
+    }
   } else {
-    ocultar(btnEmpezarPartida);
+    ocultar(configHost);
   }
 }
 
 btnEmpezarPartida.addEventListener("click", async () => {
+  let numeroRondas = Number(inputNumeroRondas.value);
+
+  if (!numeroRondas || numeroRondas < 1) {
+    numeroRondas = 1;
+  }
+
+  if (numeroRondas > casas.length) {
+    numeroRondas = casas.length;
+  }
+
   await update(partidaRef(), {
     estado: "jugando",
     rondaActual: 0,
+    numeroRondas,
     revelado: false
   });
 });
@@ -575,16 +595,17 @@ btnEmpezarPartida.addEventListener("click", async () => {
 /* JUEGO */
 function pintarJuego() {
   const ronda = datosPartida.rondaActual;
+  const totalRondas = datosPartida.numeroRondas || casas.length;
   const casa = casas[ronda];
 
-  if (!casa) {
+  if (!casa || ronda >= totalRondas) {
     update(partidaRef(), {
       estado: "terminada"
     });
     return;
   }
 
-  textoRonda.textContent = "Ronda " + (ronda + 1) + " de " + casas.length;
+  textoRonda.textContent = "Ronda " + (ronda + 1) + " de " + totalRondas;
   estadoPartida.textContent = datosPartida.revelado ? "Precio revelado" : "Adivinando";
 
   casaActual.innerHTML = `
@@ -737,8 +758,9 @@ btnSiguienteRonda.addEventListener("click", async () => {
   if (!soyHost) return;
 
   const siguiente = datosPartida.rondaActual + 1;
+  const totalRondas = datosPartida.numeroRondas || casas.length;
 
-  if (siguiente >= casas.length) {
+  if (siguiente >= totalRondas) {
     await update(partidaRef(), {
       estado: "terminada"
     });
