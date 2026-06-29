@@ -10,7 +10,7 @@
   <main class="app">
     <header>
       <h1>Adivina Casa</h1>
-      <p>El juego de adivinar precios de viviendas</p>
+      <p>El juego de adivinar precios de viviendas en la zona sur de Madrid</p>
     </header>
 
     <section id="pantalla-inicio" class="card">
@@ -32,13 +32,21 @@
 
     <section id="pantalla-sala" class="card oculto">
       <h2>Sala de espera</h2>
+
       <p>Código de partida:</p>
       <div id="codigoSala" class="codigo"></div>
 
       <h3>Jugadores</h3>
       <ul id="listaJugadores"></ul>
 
-      <button id="btnEmpezarPartida" class="oculto">Empezar partida</button>
+      <div id="configHost" class="oculto">
+        <label>Número de rondas</label>
+        <input id="inputNumeroRondas" type="number" min="1" max="30" value="10" />
+        <p class="nota">
+          Puedes elegir entre 1 y 30 rondas para esta partida.
+        </p>
+        <button id="btnEmpezarPartida">Empezar partida</button>
+      </div>
     </section>
 
     <section id="pantalla-juego" class="card oculto">
