@@ -23,62 +23,337 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-/* VIVIENDAS DE PRUEBA */
+/* VIVIENDAS DE PRUEBA - FICTICIAS, INSPIRADAS EN ZONA SUR DE MADRID */
 const casas = [
   {
-    titulo: "Piso luminoso en Madrid",
-    ciudad: "Madrid",
-    zona: "Chamberí",
-    metros: 82,
+    titulo: "Piso reformado junto a Renfe",
+    ciudad: "Getafe",
+    zona: "Centro",
+    metros: 78,
     habitaciones: 3,
-    banos: 2,
-    planta: "4ª planta",
-    extras: "Ascensor, exterior, reformado",
-    precio: 529000
-  },
-  {
-    titulo: "Apartamento cerca de la playa",
-    ciudad: "Valencia",
-    zona: "Malvarrosa",
-    metros: 64,
-    habitaciones: 2,
     banos: 1,
-    planta: "2ª planta",
-    extras: "Terraza, luminoso, cerca del mar",
-    precio: 245000
+    planta: "3ª planta",
+    extras: "Ascensor, exterior, cocina reformada",
+    precio: 238000
   },
   {
-    titulo: "Casa familiar con jardín",
-    ciudad: "Sevilla",
-    zona: "Nervión",
-    metros: 145,
-    habitaciones: 4,
-    banos: 3,
-    planta: "Casa independiente",
-    extras: "Jardín, garaje, aire acondicionado",
-    precio: 438000
-  },
-  {
-    titulo: "Estudio céntrico reformado",
-    ciudad: "Barcelona",
-    zona: "Gràcia",
-    metros: 42,
-    habitaciones: 1,
-    banos: 1,
-    planta: "1ª planta",
-    extras: "Reformado, balcón, buena ubicación",
-    precio: 289000
-  },
-  {
-    titulo: "Ático con terraza",
-    ciudad: "Málaga",
-    zona: "Centro Histórico",
-    metros: 96,
+    titulo: "Ático con terraza amplia",
+    ciudad: "Leganés",
+    zona: "Zarzaquemada",
+    metros: 92,
     habitaciones: 3,
     banos: 2,
     planta: "Ático",
-    extras: "Terraza grande, ascensor, vistas",
-    precio: 510000
+    extras: "Terraza, garaje, trastero",
+    precio: 319000
+  },
+  {
+    titulo: "Piso familiar cerca del metro",
+    ciudad: "Alcorcón",
+    zona: "Parque Lisboa",
+    metros: 88,
+    habitaciones: 3,
+    banos: 2,
+    planta: "5ª planta",
+    extras: "Ascensor, calefacción central, exterior",
+    precio: 275000
+  },
+  {
+    titulo: "Vivienda luminosa con balcón",
+    ciudad: "Móstoles",
+    zona: "Pradillo",
+    metros: 81,
+    habitaciones: 3,
+    banos: 1,
+    planta: "4ª planta",
+    extras: "Balcón, ascensor, buena comunicación",
+    precio: 229000
+  },
+  {
+    titulo: "Piso amplio en avenida principal",
+    ciudad: "Fuenlabrada",
+    zona: "Centro-Arroyo",
+    metros: 97,
+    habitaciones: 4,
+    banos: 2,
+    planta: "2ª planta",
+    extras: "Exterior, terraza cerrada, ascensor",
+    precio: 252000
+  },
+  {
+    titulo: "Chalet adosado con patio",
+    ciudad: "Pinto",
+    zona: "La Tenería",
+    metros: 168,
+    habitaciones: 4,
+    banos: 3,
+    planta: "Chalet adosado",
+    extras: "Patio, garaje, buhardilla",
+    precio: 435000
+  },
+  {
+    titulo: "Piso económico para entrar a vivir",
+    ciudad: "Parla",
+    zona: "Reyes",
+    metros: 72,
+    habitaciones: 3,
+    banos: 1,
+    planta: "1ª planta",
+    extras: "Reformado, exterior, cerca de comercios",
+    precio: 154000
+  },
+  {
+    titulo: "Dúplex moderno con garaje",
+    ciudad: "Valdemoro",
+    zona: "Hospital",
+    metros: 118,
+    habitaciones: 3,
+    banos: 2,
+    planta: "Dúplex",
+    extras: "Garaje, piscina comunitaria, trastero",
+    precio: 286000
+  },
+  {
+    titulo: "Piso con vistas despejadas",
+    ciudad: "Getafe",
+    zona: "El Bercial",
+    metros: 95,
+    habitaciones: 3,
+    banos: 2,
+    planta: "7ª planta",
+    extras: "Urbanización, garaje, piscina",
+    precio: 342000
+  },
+  {
+    titulo: "Apartamento coqueto reformado",
+    ciudad: "Leganés",
+    zona: "San Nicasio",
+    metros: 56,
+    habitaciones: 2,
+    banos: 1,
+    planta: "Bajo",
+    extras: "Patio, reforma reciente, metro cercano",
+    precio: 187000
+  },
+  {
+    titulo: "Piso exterior con terraza",
+    ciudad: "Alcorcón",
+    zona: "San José de Valderas",
+    metros: 84,
+    habitaciones: 3,
+    banos: 1,
+    planta: "6ª planta",
+    extras: "Terraza, ascensor, orientación sur",
+    precio: 244000
+  },
+  {
+    titulo: "Casa baja con mucho potencial",
+    ciudad: "Móstoles",
+    zona: "Centro",
+    metros: 110,
+    habitaciones: 3,
+    banos: 1,
+    planta: "Casa baja",
+    extras: "Patio, posibilidad de reforma, sin comunidad",
+    precio: 268000
+  },
+  {
+    titulo: "Piso seminuevo en urbanización",
+    ciudad: "Fuenlabrada",
+    zona: "Loranca",
+    metros: 89,
+    habitaciones: 3,
+    banos: 2,
+    planta: "3ª planta",
+    extras: "Piscina, garaje, zonas verdes",
+    precio: 265000
+  },
+  {
+    titulo: "Chalet pareado con jardín",
+    ciudad: "Aranjuez",
+    zona: "La Montaña",
+    metros: 184,
+    habitaciones: 5,
+    banos: 3,
+    planta: "Chalet pareado",
+    extras: "Jardín, garaje doble, terraza",
+    precio: 398000
+  },
+  {
+    titulo: "Piso junto a estación",
+    ciudad: "Pinto",
+    zona: "Centro",
+    metros: 76,
+    habitaciones: 3,
+    banos: 1,
+    planta: "2ª planta",
+    extras: "Ascensor, balcón, cerca de Renfe",
+    precio: 218000
+  },
+  {
+    titulo: "Vivienda con reforma integral",
+    ciudad: "Parla",
+    zona: "Fuentebella",
+    metros: 83,
+    habitaciones: 3,
+    banos: 2,
+    planta: "4ª planta",
+    extras: "Reformado, aire acondicionado, ascensor",
+    precio: 181000
+  },
+  {
+    titulo: "Piso moderno con piscina",
+    ciudad: "Valdemoro",
+    zona: "El Restón",
+    metros: 101,
+    habitaciones: 3,
+    banos: 2,
+    planta: "1ª planta",
+    extras: "Piscina, garaje, trastero",
+    precio: 298000
+  },
+  {
+    titulo: "Piso amplio junto a universidad",
+    ciudad: "Getafe",
+    zona: "Juan de la Cierva",
+    metros: 90,
+    habitaciones: 4,
+    banos: 2,
+    planta: "4ª planta",
+    extras: "Ascensor, exterior, buena rentabilidad",
+    precio: 255000
+  },
+  {
+    titulo: "Bajo con patio privado",
+    ciudad: "Leganés",
+    zona: "El Carrascal",
+    metros: 74,
+    habitaciones: 2,
+    banos: 1,
+    planta: "Bajo",
+    extras: "Patio, urbanización, calefacción",
+    precio: 229000
+  },
+  {
+    titulo: "Piso alto muy luminoso",
+    ciudad: "Alcorcón",
+    zona: "Ensanche Sur",
+    metros: 102,
+    habitaciones: 3,
+    banos: 2,
+    planta: "8ª planta",
+    extras: "Garaje, trastero, urbanización moderna",
+    precio: 329000
+  },
+  {
+    titulo: "Vivienda lista para entrar",
+    ciudad: "Móstoles",
+    zona: "El Soto",
+    metros: 79,
+    habitaciones: 3,
+    banos: 1,
+    planta: "3ª planta",
+    extras: "Reformado, ascensor, zona tranquila",
+    precio: 236000
+  },
+  {
+    titulo: "Piso familiar con dos terrazas",
+    ciudad: "Fuenlabrada",
+    zona: "El Naranjo",
+    metros: 106,
+    habitaciones: 4,
+    banos: 2,
+    planta: "5ª planta",
+    extras: "Dos terrazas, ascensor, exterior",
+    precio: 249000
+  },
+  {
+    titulo: "Chalet independiente con piscina",
+    ciudad: "Griñón",
+    zona: "Residencial",
+    metros: 245,
+    habitaciones: 5,
+    banos: 4,
+    planta: "Chalet independiente",
+    extras: "Piscina privada, parcela, garaje",
+    precio: 548000
+  },
+  {
+    titulo: "Piso compacto bien ubicado",
+    ciudad: "Humanes de Madrid",
+    zona: "Centro",
+    metros: 68,
+    habitaciones: 2,
+    banos: 1,
+    planta: "2ª planta",
+    extras: "Ascensor, exterior, cerca de transporte",
+    precio: 169000
+  },
+  {
+    titulo: "Dúplex con terraza superior",
+    ciudad: "Ciempozuelos",
+    zona: "Centro",
+    metros: 112,
+    habitaciones: 3,
+    banos: 2,
+    planta: "Dúplex",
+    extras: "Terraza, garaje, trastero",
+    precio: 229000
+  },
+  {
+    titulo: "Piso señorial reformado",
+    ciudad: "Aranjuez",
+    zona: "Centro",
+    metros: 124,
+    habitaciones: 4,
+    banos: 2,
+    planta: "2ª planta",
+    extras: "Edificio clásico, balcón, techos altos",
+    precio: 312000
+  },
+  {
+    titulo: "Piso con urbanización cerrada",
+    ciudad: "Getafe",
+    zona: "Los Molinos",
+    metros: 104,
+    habitaciones: 3,
+    banos: 2,
+    planta: "6ª planta",
+    extras: "Piscina, garaje, trastero",
+    precio: 365000
+  },
+  {
+    titulo: "Piso junto al parque",
+    ciudad: "Leganés",
+    zona: "Leganés Norte",
+    metros: 98,
+    habitaciones: 3,
+    banos: 2,
+    planta: "4ª planta",
+    extras: "Garaje, trastero, zonas verdes",
+    precio: 309000
+  },
+  {
+    titulo: "Vivienda exterior con ascensor",
+    ciudad: "Parla",
+    zona: "Centro",
+    metros: 77,
+    habitaciones: 3,
+    banos: 1,
+    planta: "5ª planta",
+    extras: "Ascensor, balcón, buena ubicación",
+    precio: 166000
+  },
+  {
+    titulo: "Piso grande para familia",
+    ciudad: "Valdemoro",
+    zona: "Centro",
+    metros: 116,
+    habitaciones: 4,
+    banos: 2,
+    planta: "3ª planta",
+    extras: "Ascensor, terraza, plaza de garaje",
+    precio: 272000
   }
 ];
 
