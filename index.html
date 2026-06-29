@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adivina Casa</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>Adivina Casa</h1>
+      <p>El juego de adivinar precios de viviendas</p>
+    </header>
+
+    <section id="pantalla-inicio" class="card">
+      <h2>Entrar a una partida</h2>
+
+      <label>Tu nombre</label>
+      <input id="nombreJugador" type="text" placeholder="Ej: Jorge" />
+
+      <label>Código de partida</label>
+      <input id="codigoPartida" type="text" placeholder="Ej: CASA123" />
+
+      <button id="btnCrearPartida">Crear partida</button>
+      <button id="btnUnirsePartida" class="secundario">Unirse a partida</button>
+
+      <p class="nota">
+        Si creas una partida, comparte el código con tus amigos.
+      </p>
+    </section>
+
+    <section id="pantalla-sala" class="card oculto">
+      <h2>Sala de espera</h2>
+      <p>Código de partida:</p>
+      <div id="codigoSala" class="codigo"></div>
+
+      <h3>Jugadores</h3>
+      <ul id="listaJugadores"></ul>
+
+      <button id="btnEmpezarPartida" class="oculto">Empezar partida</button>
+    </section>
+
+    <section id="pantalla-juego" class="card oculto">
+      <div class="fila">
+        <span id="textoRonda"></span>
+        <span id="estadoPartida"></span>
+      </div>
+
+      <div id="casaActual" class="casa"></div>
+
+      <div id="zonaApuesta">
+        <label>¿Cuánto crees que cuesta?</label>
+        <input id="inputApuesta" type="number" placeholder="Ej: 250000" />
+        <button id="btnEnviarApuesta">Enviar apuesta</button>
+      </div>
+
+      <div id="zonaEspera" class="oculto">
+        <p>Esperando al resto de jugadores...</p>
+      </div>
+
+      <div id="zonaHost" class="oculto">
+        <button id="btnRevelarPrecio">Revelar precio y calcular puntos</button>
+        <button id="btnSiguienteRonda" class="secundario oculto">Siguiente vivienda</button>
+      </div>
+    </section>
+
+    <section id="pantalla-resultados" class="card oculto">
+      <h2>Resultado de la ronda</h2>
+      <div id="resultadoRonda"></div>
+    </section>
+
+    <section id="pantalla-ranking" class="card oculto">
+      <h2>Ranking</h2>
+      <ol id="ranking"></ol>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
