@@ -12,7 +12,6 @@
   --primary-dark: #5b21b6;
   --accent: #06b6d4;
   --success: #16a34a;
-  --warning: #f59e0b;
   --soft: #f1f5f9;
   --line: #e2e8f0;
 }
@@ -51,7 +50,7 @@ header h1 {
 
 header p {
   margin: 12px auto 0;
-  max-width: 320px;
+  max-width: 340px;
   color: rgba(255, 255, 255, 0.76);
   font-size: 15px;
 }
