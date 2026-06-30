@@ -5,7 +5,10 @@ import {
   set,
   get,
   update,
-  onValue
+  onValue,
+  push,
+  query,
+  limitToLast
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
 
 /* CONFIGURACIÓN FIREBASE */
@@ -245,6 +248,7 @@ if (!jugadorId) {
 
 let soyHost = false;
 let datosPartida = null;
+let chatEscuchando = false;
 
 /* ELEMENTOS */
 const pantallaInicio = document.getElementById("pantalla-inicio");
@@ -252,6 +256,7 @@ const pantallaSala = document.getElementById("pantalla-sala");
 const pantallaJuego = document.getElementById("pantalla-juego");
 const pantallaResultados = document.getElementById("pantalla-resultados");
 const pantallaRanking = document.getElementById("pantalla-ranking");
+const pantallaChat = document.getElementById("pantalla-chat");
 
 const nombreJugador = document.getElementById("nombreJugador");
 const codigoPartida = document.getElementById("codigoPartida");
@@ -277,6 +282,10 @@ const zonaEspera = document.getElementById("zonaEspera");
 const zonaHost = document.getElementById("zonaHost");
 const resultadoRonda = document.getElementById("resultadoRonda");
 const ranking = document.getElementById("ranking");
+
+const mensajesChat = document.getElementById("mensajesChat");
+const inputChat = document.getElementById("inputChat");
+const btnEnviarChat = document.getElementById("btnEnviarChat");
 
 /* UTILIDADES */
 function mostrar(elemento) {
@@ -307,6 +316,10 @@ function apuestaRef(ronda) {
   return ref(db, "partidas/" + codigoActual + "/apuestas/" + ronda + "/" + jugadorId);
 }
 
+function chatRef() {
+  return ref(db, "partidas/" + codigoActual + "/chat");
+}
+
 function normalizarCodigo(codigo) {
   return codigo.trim().toUpperCase().replace(/\s/g, "");
 }
@@ -320,6 +333,15 @@ function validarNombre() {
   }
 
   return nombre;
+}
+
+function escaparHTML(texto) {
+  return texto
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 /* CREAR PARTIDA */
@@ -344,7 +366,8 @@ btnCrearPartida.addEventListener("click", async () => {
         host: true
       }
     },
-    apuestas: {}
+    apuestas: {},
+    chat: {}
   };
 
   await set(partidaRef(), nuevaPartida);
@@ -388,6 +411,8 @@ function entrarEnPartida() {
   ocultar(pantallaInicio);
   mostrar(pantallaSala);
   mostrar(pantallaRanking);
+  mostrar(pantallaChat);
+  escucharChat();
 
   codigoSala.textContent = codigoActual;
 
@@ -678,3 +703,64 @@ function pintarRanking() {
     ranking.appendChild(li);
   });
 }
+
+/* CHAT */
+function escucharChat() {
+  if (chatEscuchando) return;
+  chatEscuchando = true;
+
+  const ultimosMensajes = query(chatRef(), limitToLast(60));
+
+  onValue(ultimosMensajes, (snap) => {
+    const mensajes = snap.val() || {};
+    const lista = Object.values(mensajes).sort((a, b) => (a.creado || 0) - (b.creado || 0));
+
+    mensajesChat.innerHTML = "";
+
+    lista.forEach((m) => {
+      const div = document.createElement("div");
+      div.className = "chat-msg" + (m.jugadorId === jugadorId ? " yo" : "");
+
+      const hora = m.creado
+        ? new Date(m.creado).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })
+        : "";
+
+      div.innerHTML = `
+        <div class="chat-nombre">${escaparHTML(m.nombre || "Jugador")}</div>
+        <div class="chat-texto">${escaparHTML(m.texto || "")}</div>
+        <div class="chat-hora">${hora}</div>
+      `;
+
+      mensajesChat.appendChild(div);
+    });
+
+    mensajesChat.scrollTop = mensajesChat.scrollHeight;
+  });
+}
+
+async function enviarChat() {
+  const texto = inputChat.value.trim();
+
+  if (!texto) return;
+  if (!datosPartida) return;
+
+  const jugador = datosPartida.jugadores?.[jugadorId];
+  const nombre = jugador?.nombre || nombreJugador.value.trim() || "Jugador";
+
+  inputChat.value = "";
+
+  await push(chatRef(), {
+    jugadorId,
+    nombre,
+    texto: texto.slice(0, 160),
+    creado: Date.now()
+  });
+}
+
+btnEnviarChat.addEventListener("click", enviarChat);
+
+inputChat.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    enviarChat();
+  }
+});
