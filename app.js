@@ -23,339 +23,216 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-/* VIVIENDAS DE PRUEBA - FICTICIAS, INSPIRADAS EN ZONA SUR DE MADRID */
-const casas = [
+/* GENERADOR WALLAPOP */
+const zonas = [
+  "Getafe", "Leganés", "Alcorcón", "Móstoles", "Fuenlabrada",
+  "Parla", "Pinto", "Valdemoro", "Villaverde", "Usera",
+  "Carabanchel", "Arganzuela", "Rivas", "Coslada", "Aluche"
+];
+
+const estados = [
+  { nombre: "Como nuevo", factor: 0.88 },
+  { nombre: "Muy buen estado", factor: 0.76 },
+  { nombre: "Buen estado", factor: 0.64 },
+  { nombre: "Con marcas de uso", factor: 0.48 },
+  { nombre: "Bastante usado", factor: 0.34 },
+  { nombre: "Funciona, pero tiene detalles", factor: 0.26 }
+];
+
+const colores = [
+  ["#34d399", "#22d3ee"],
+  ["#60a5fa", "#a78bfa"],
+  ["#fb7185", "#facc15"],
+  ["#f97316", "#facc15"],
+  ["#2dd4bf", "#0f766e"],
+  ["#c084fc", "#f472b6"],
+  ["#93c5fd", "#10b981"],
+  ["#fda4af", "#fb923c"]
+];
+
+const categorias = [
   {
-    titulo: "Piso reformado junto a Renfe",
-    ciudad: "Getafe",
-    zona: "Centro",
-    metros: 78,
-    habitaciones: 3,
-    banos: 1,
-    planta: "3ª planta",
-    extras: "Ascensor, exterior, cocina reformada",
-    precio: 238000
+    tipo: "móvil",
+    emoji: "📱",
+    base: 520,
+    titulos: ["iPhone 12", "iPhone 13", "Samsung Galaxy S21", "Xiaomi Redmi Note", "Google Pixel 6"],
+    detalles: ["128 GB", "256 GB", "pantalla OLED", "batería cambiada", "libre de operador"],
+    extras: ["incluye cargador", "con funda", "sin caja", "con caja original", "protector de pantalla"]
   },
   {
-    titulo: "Ático con terraza amplia",
-    ciudad: "Leganés",
-    zona: "Zarzaquemada",
-    metros: 92,
-    habitaciones: 3,
-    banos: 2,
-    planta: "Ático",
-    extras: "Terraza, garaje, trastero",
-    precio: 319000
+    tipo: "consola",
+    emoji: "🎮",
+    base: 390,
+    titulos: ["PlayStation 5", "PlayStation 4 Pro", "Nintendo Switch", "Xbox Series S", "Xbox Series X"],
+    detalles: ["dos mandos", "un mando", "1 TB", "versión digital", "pack familiar"],
+    extras: ["incluye juegos", "con caja", "sin caja", "mando con desgaste", "cables originales"]
   },
   {
-    titulo: "Piso familiar cerca del metro",
-    ciudad: "Alcorcón",
-    zona: "Parque Lisboa",
-    metros: 88,
-    habitaciones: 3,
-    banos: 2,
-    planta: "5ª planta",
-    extras: "Ascensor, calefacción central, exterior",
-    precio: 275000
+    tipo: "bicicleta",
+    emoji: "🚲",
+    base: 420,
+    titulos: ["Bicicleta de montaña", "Bicicleta urbana", "Bicicleta eléctrica", "Bici plegable", "Bicicleta de carretera"],
+    detalles: ["rueda 29", "cuadro de aluminio", "frenos de disco", "cambio Shimano", "talla M"],
+    extras: ["incluye casco", "con candado", "ruedas nuevas", "necesita ajuste", "usada pocos fines de semana"]
   },
   {
-    titulo: "Vivienda luminosa con balcón",
-    ciudad: "Móstoles",
-    zona: "Pradillo",
-    metros: 81,
-    habitaciones: 3,
-    banos: 1,
-    planta: "4ª planta",
-    extras: "Balcón, ascensor, buena comunicación",
-    precio: 229000
+    tipo: "patinete",
+    emoji: "🛴",
+    base: 360,
+    titulos: ["Patinete eléctrico Xiaomi", "Patinete eléctrico Cecotec", "Patinete urbano", "Patinete potente", "Patinete plegable"],
+    detalles: ["autonomía 25 km", "ruedas antipinchazos", "plegable", "motor 350W", "con app"],
+    extras: ["incluye cargador", "con candado", "batería cuidada", "tiene arañazos", "recién revisado"]
   },
   {
-    titulo: "Piso amplio en avenida principal",
-    ciudad: "Fuenlabrada",
-    zona: "Centro-Arroyo",
-    metros: 97,
-    habitaciones: 4,
-    banos: 2,
-    planta: "2ª planta",
-    extras: "Exterior, terraza cerrada, ascensor",
-    precio: 252000
+    tipo: "portátil",
+    emoji: "💻",
+    base: 750,
+    titulos: ["MacBook Air", "Lenovo ThinkPad", "HP Pavilion", "Asus VivoBook", "Dell XPS"],
+    detalles: ["16 GB RAM", "8 GB RAM", "SSD 512 GB", "pantalla 13 pulgadas", "i5"],
+    extras: ["incluye cargador", "con funda", "batería al 85%", "teclado español", "sin caja"]
   },
   {
-    titulo: "Chalet adosado con patio",
-    ciudad: "Pinto",
-    zona: "La Tenería",
-    metros: 168,
-    habitaciones: 4,
-    banos: 3,
-    planta: "Chalet adosado",
-    extras: "Patio, garaje, buhardilla",
-    precio: 435000
+    tipo: "televisor",
+    emoji: "📺",
+    base: 520,
+    titulos: ["Smart TV Samsung", "TV LG OLED", "Televisor Xiaomi", "Sony Bravia", "TV Philips Ambilight"],
+    detalles: ["55 pulgadas", "65 pulgadas", "4K", "Smart TV", "HDR"],
+    extras: ["con mando", "sin soporte", "soporte de pared", "poco uso", "pequeña marca en marco"]
   },
   {
-    titulo: "Piso económico para entrar a vivir",
-    ciudad: "Parla",
-    zona: "Reyes",
-    metros: 72,
-    habitaciones: 3,
-    banos: 1,
-    planta: "1ª planta",
-    extras: "Reformado, exterior, cerca de comercios",
-    precio: 154000
+    tipo: "sofá",
+    emoji: "🛋️",
+    base: 480,
+    titulos: ["Sofá chaise longue", "Sofá cama", "Sofá de piel", "Sofá de tres plazas", "Rinconera grande"],
+    detalles: ["color gris", "tela antimanchas", "piel sintética", "muy cómodo", "desenfundable"],
+    extras: ["hay que recogerlo", "cabe en ascensor", "con cojines", "tiene roce lateral", "casi sin uso"]
   },
   {
-    titulo: "Dúplex moderno con garaje",
-    ciudad: "Valdemoro",
-    zona: "Hospital",
-    metros: 118,
-    habitaciones: 3,
-    banos: 2,
-    planta: "Dúplex",
-    extras: "Garaje, piscina comunitaria, trastero",
-    precio: 286000
+    tipo: "silla gamer",
+    emoji: "🪑",
+    base: 210,
+    titulos: ["Silla gaming", "Silla de escritorio", "Silla ergonómica", "Silla gamer RGB", "Silla de teletrabajo"],
+    detalles: ["reposabrazos regulable", "reclinable", "color negro", "cojín lumbar", "base metálica"],
+    extras: ["montada", "poco uso", "tiene desgaste", "ruedas nuevas", "se recoge en mano"]
   },
   {
-    titulo: "Piso con vistas despejadas",
-    ciudad: "Getafe",
-    zona: "El Bercial",
-    metros: 95,
-    habitaciones: 3,
-    banos: 2,
-    planta: "7ª planta",
-    extras: "Urbanización, garaje, piscina",
-    precio: 342000
+    tipo: "cafetera",
+    emoji: "☕",
+    base: 230,
+    titulos: ["Cafetera superautomática", "Nespresso", "Cafetera DeLonghi", "Cafetera italiana eléctrica", "Cafetera express"],
+    detalles: ["muele café", "depósito grande", "espumador", "cápsulas", "programable"],
+    extras: ["recién descalcificada", "con caja", "incluye cápsulas", "sin manual", "poco uso"]
   },
   {
-    titulo: "Apartamento coqueto reformado",
-    ciudad: "Leganés",
-    zona: "San Nicasio",
-    metros: 56,
-    habitaciones: 2,
-    banos: 1,
-    planta: "Bajo",
-    extras: "Patio, reforma reciente, metro cercano",
-    precio: 187000
+    tipo: "cámara",
+    emoji: "📷",
+    base: 690,
+    titulos: ["Canon EOS", "Sony Alpha", "Nikon réflex", "GoPro Hero", "Cámara compacta premium"],
+    detalles: ["objetivo incluido", "4K", "pantalla abatible", "sensor grande", "estabilizador"],
+    extras: ["con bolsa", "segunda batería", "sin caja", "tarjeta SD incluida", "muy cuidada"]
   },
   {
-    titulo: "Piso exterior con terraza",
-    ciudad: "Alcorcón",
-    zona: "San José de Valderas",
-    metros: 84,
-    habitaciones: 3,
-    banos: 1,
-    planta: "6ª planta",
-    extras: "Terraza, ascensor, orientación sur",
-    precio: 244000
+    tipo: "instrumento",
+    emoji: "🎸",
+    base: 340,
+    titulos: ["Guitarra eléctrica", "Guitarra acústica", "Teclado Yamaha", "Bajo eléctrico", "Ukelele premium"],
+    detalles: ["color madera", "pastillas nuevas", "88 teclas", "amplificador incluido", "funda rígida"],
+    extras: ["con funda", "incluye cable", "necesita cuerdas", "ideal principiantes", "poco uso"]
   },
   {
-    titulo: "Casa baja con mucho potencial",
-    ciudad: "Móstoles",
-    zona: "Centro",
-    metros: 110,
-    habitaciones: 3,
-    banos: 1,
-    planta: "Casa baja",
-    extras: "Patio, posibilidad de reforma, sin comunidad",
-    precio: 268000
+    tipo: "robot de cocina",
+    emoji: "🍳",
+    base: 620,
+    titulos: ["Thermomix", "Robot de cocina Cecotec", "Monsieur Cuisine", "KitchenAid", "Robot amasador"],
+    detalles: ["varios accesorios", "pantalla táctil", "vaso grande", "recetas integradas", "alta potencia"],
+    extras: ["con libro", "con caja", "sin báscula", "muy cuidado", "usado pocas veces"]
   },
   {
-    titulo: "Piso seminuevo en urbanización",
-    ciudad: "Fuenlabrada",
-    zona: "Loranca",
-    metros: 89,
-    habitaciones: 3,
-    banos: 2,
-    planta: "3ª planta",
-    extras: "Piscina, garaje, zonas verdes",
-    precio: 265000
+    tipo: "reloj",
+    emoji: "⌚",
+    base: 360,
+    titulos: ["Apple Watch", "Samsung Galaxy Watch", "Garmin Forerunner", "Huawei Watch", "Amazfit GTR"],
+    detalles: ["GPS", "correa deportiva", "pantalla grande", "medición sueño", "resistente al agua"],
+    extras: ["con cargador", "sin caja", "correa extra", "batería buena", "marcas leves"]
   },
   {
-    titulo: "Chalet pareado con jardín",
-    ciudad: "Aranjuez",
-    zona: "La Montaña",
-    metros: 184,
-    habitaciones: 5,
-    banos: 3,
-    planta: "Chalet pareado",
-    extras: "Jardín, garaje doble, terraza",
-    precio: 398000
-  },
-  {
-    titulo: "Piso junto a estación",
-    ciudad: "Pinto",
-    zona: "Centro",
-    metros: 76,
-    habitaciones: 3,
-    banos: 1,
-    planta: "2ª planta",
-    extras: "Ascensor, balcón, cerca de Renfe",
-    precio: 218000
-  },
-  {
-    titulo: "Vivienda con reforma integral",
-    ciudad: "Parla",
-    zona: "Fuentebella",
-    metros: 83,
-    habitaciones: 3,
-    banos: 2,
-    planta: "4ª planta",
-    extras: "Reformado, aire acondicionado, ascensor",
-    precio: 181000
-  },
-  {
-    titulo: "Piso moderno con piscina",
-    ciudad: "Valdemoro",
-    zona: "El Restón",
-    metros: 101,
-    habitaciones: 3,
-    banos: 2,
-    planta: "1ª planta",
-    extras: "Piscina, garaje, trastero",
-    precio: 298000
-  },
-  {
-    titulo: "Piso amplio junto a universidad",
-    ciudad: "Getafe",
-    zona: "Juan de la Cierva",
-    metros: 90,
-    habitaciones: 4,
-    banos: 2,
-    planta: "4ª planta",
-    extras: "Ascensor, exterior, buena rentabilidad",
-    precio: 255000
-  },
-  {
-    titulo: "Bajo con patio privado",
-    ciudad: "Leganés",
-    zona: "El Carrascal",
-    metros: 74,
-    habitaciones: 2,
-    banos: 1,
-    planta: "Bajo",
-    extras: "Patio, urbanización, calefacción",
-    precio: 229000
-  },
-  {
-    titulo: "Piso alto muy luminoso",
-    ciudad: "Alcorcón",
-    zona: "Ensanche Sur",
-    metros: 102,
-    habitaciones: 3,
-    banos: 2,
-    planta: "8ª planta",
-    extras: "Garaje, trastero, urbanización moderna",
-    precio: 329000
-  },
-  {
-    titulo: "Vivienda lista para entrar",
-    ciudad: "Móstoles",
-    zona: "El Soto",
-    metros: 79,
-    habitaciones: 3,
-    banos: 1,
-    planta: "3ª planta",
-    extras: "Reformado, ascensor, zona tranquila",
-    precio: 236000
-  },
-  {
-    titulo: "Piso familiar con dos terrazas",
-    ciudad: "Fuenlabrada",
-    zona: "El Naranjo",
-    metros: 106,
-    habitaciones: 4,
-    banos: 2,
-    planta: "5ª planta",
-    extras: "Dos terrazas, ascensor, exterior",
-    precio: 249000
-  },
-  {
-    titulo: "Chalet independiente con piscina",
-    ciudad: "Griñón",
-    zona: "Residencial",
-    metros: 245,
-    habitaciones: 5,
-    banos: 4,
-    planta: "Chalet independiente",
-    extras: "Piscina privada, parcela, garaje",
-    precio: 548000
-  },
-  {
-    titulo: "Piso compacto bien ubicado",
-    ciudad: "Humanes de Madrid",
-    zona: "Centro",
-    metros: 68,
-    habitaciones: 2,
-    banos: 1,
-    planta: "2ª planta",
-    extras: "Ascensor, exterior, cerca de transporte",
-    precio: 169000
-  },
-  {
-    titulo: "Dúplex con terraza superior",
-    ciudad: "Ciempozuelos",
-    zona: "Centro",
-    metros: 112,
-    habitaciones: 3,
-    banos: 2,
-    planta: "Dúplex",
-    extras: "Terraza, garaje, trastero",
-    precio: 229000
-  },
-  {
-    titulo: "Piso señorial reformado",
-    ciudad: "Aranjuez",
-    zona: "Centro",
-    metros: 124,
-    habitaciones: 4,
-    banos: 2,
-    planta: "2ª planta",
-    extras: "Edificio clásico, balcón, techos altos",
-    precio: 312000
-  },
-  {
-    titulo: "Piso con urbanización cerrada",
-    ciudad: "Getafe",
-    zona: "Los Molinos",
-    metros: 104,
-    habitaciones: 3,
-    banos: 2,
-    planta: "6ª planta",
-    extras: "Piscina, garaje, trastero",
-    precio: 365000
-  },
-  {
-    titulo: "Piso junto al parque",
-    ciudad: "Leganés",
-    zona: "Leganés Norte",
-    metros: 98,
-    habitaciones: 3,
-    banos: 2,
-    planta: "4ª planta",
-    extras: "Garaje, trastero, zonas verdes",
-    precio: 309000
-  },
-  {
-    titulo: "Vivienda exterior con ascensor",
-    ciudad: "Parla",
-    zona: "Centro",
-    metros: 77,
-    habitaciones: 3,
-    banos: 1,
-    planta: "5ª planta",
-    extras: "Ascensor, balcón, buena ubicación",
-    precio: 166000
-  },
-  {
-    titulo: "Piso grande para familia",
-    ciudad: "Valdemoro",
-    zona: "Centro",
-    metros: 116,
-    habitaciones: 4,
-    banos: 2,
-    planta: "3ª planta",
-    extras: "Ascensor, terraza, plaza de garaje",
-    precio: 272000
+    tipo: "aspiradora",
+    emoji: "🧹",
+    base: 330,
+    titulos: ["Dyson inalámbrica", "Roomba", "Conga robot", "Aspiradora Bosch", "Aspiradora sin cable"],
+    detalles: ["gran potencia", "varios cepillos", "mapea la casa", "batería extraíble", "depósito grande"],
+    extras: ["con accesorios", "filtro cambiado", "sin caja", "ruedas gastadas", "funciona perfecto"]
   }
 ];
+
+function elegir(lista) {
+  return lista[Math.floor(Math.random() * lista.length)];
+}
+
+function numero(min, max) {
+  return Math.floor(min + Math.random() * (max - min + 1));
+}
+
+function redondearPrecio(precio) {
+  if (precio < 100) return Math.max(5, Math.round(precio / 5) * 5);
+  return Math.max(10, Math.round(precio / 10) * 10);
+}
+
+function generarProducto() {
+  const categoria = elegir(categorias);
+  const estado = elegir(estados);
+  const tituloBase = elegir(categoria.titulos);
+  const detalle1 = elegir(categoria.detalles);
+  const detalle2 = elegir(categoria.detalles);
+  const extra = elegir(categoria.extras);
+  const zona = elegir(zonas);
+  const antiguedad = numero(1, 8);
+  const color = elegir(colores);
+
+  const rareza = 0.88 + Math.random() * 0.32;
+  const factorAntiguedad = Math.max(0.42, 1 - antiguedad * 0.055);
+  const ruido = 0.88 + Math.random() * 0.24;
+
+  let precio = categoria.base * estado.factor * factorAntiguedad * rareza * ruido;
+
+  if (tituloBase.toLowerCase().includes("iphone 13")) precio *= 1.25;
+  if (tituloBase.toLowerCase().includes("playstation 5")) precio *= 1.25;
+  if (tituloBase.toLowerCase().includes("macbook")) precio *= 1.35;
+  if (tituloBase.toLowerCase().includes("thermomix")) precio *= 1.45;
+  if (tituloBase.toLowerCase().includes("dyson")) precio *= 1.25;
+  if (tituloBase.toLowerCase().includes("eléctrica")) precio *= 1.35;
+  if (estado.nombre.includes("detalles")) precio *= 0.82;
+  if (extra.includes("caja")) precio *= 1.04;
+  if (extra.includes("desgaste") || extra.includes("arañazos") || extra.includes("roce")) precio *= 0.9;
+
+  precio = redondearPrecio(precio);
+
+  return {
+    titulo: tituloBase,
+    tipo: categoria.tipo,
+    emoji: categoria.emoji,
+    detalle1,
+    detalle2,
+    extra,
+    estado: estado.nombre,
+    antiguedad,
+    zona,
+    color1: color[0],
+    color2: color[1],
+    descripcion: `${detalle1}, ${detalle2}. ${extra}. Vendo por no usar.`,
+    precio
+  };
+}
+
+function generarProductos(cantidad) {
+  const productos = [];
+
+  for (let i = 0; i < cantidad; i++) {
+    productos.push(generarProducto());
+  }
+
+  return productos;
+}
 
 /* ESTADO LOCAL */
 let codigoActual = "";
@@ -393,7 +270,7 @@ const codigoSala = document.getElementById("codigoSala");
 const listaJugadores = document.getElementById("listaJugadores");
 const textoRonda = document.getElementById("textoRonda");
 const estadoPartida = document.getElementById("estadoPartida");
-const casaActual = document.getElementById("casaActual");
+const productoActual = document.getElementById("productoActual");
 const inputApuesta = document.getElementById("inputApuesta");
 const zonaApuesta = document.getElementById("zonaApuesta");
 const zonaEspera = document.getElementById("zonaEspera");
@@ -411,7 +288,7 @@ function ocultar(elemento) {
 }
 
 function generarCodigo() {
-  return "CASA" + Math.floor(100 + Math.random() * 900);
+  return "WALLA" + Math.floor(100 + Math.random() * 900);
 }
 
 function formatoEuros(numero) {
@@ -563,10 +440,9 @@ function pintarSala() {
 
   if (soyHost) {
     mostrar(configHost);
-    inputNumeroRondas.max = casas.length;
 
     if (!inputNumeroRondas.value) {
-      inputNumeroRondas.value = Math.min(10, casas.length);
+      inputNumeroRondas.value = 10;
     }
   } else {
     ocultar(configHost);
@@ -580,14 +456,17 @@ btnEmpezarPartida.addEventListener("click", async () => {
     numeroRondas = 1;
   }
 
-  if (numeroRondas > casas.length) {
-    numeroRondas = casas.length;
+  if (numeroRondas > 50) {
+    numeroRondas = 50;
   }
+
+  const productos = generarProductos(numeroRondas);
 
   await update(partidaRef(), {
     estado: "jugando",
     rondaActual: 0,
     numeroRondas,
+    productos,
     revelado: false
   });
 });
@@ -595,10 +474,11 @@ btnEmpezarPartida.addEventListener("click", async () => {
 /* JUEGO */
 function pintarJuego() {
   const ronda = datosPartida.rondaActual;
-  const totalRondas = datosPartida.numeroRondas || casas.length;
-  const casa = casas[ronda];
+  const totalRondas = datosPartida.numeroRondas || 10;
+  const productos = datosPartida.productos || [];
+  const producto = productos[ronda];
 
-  if (!casa || ronda >= totalRondas) {
+  if (!producto || ronda >= totalRondas) {
     update(partidaRef(), {
       estado: "terminada"
     });
@@ -608,15 +488,26 @@ function pintarJuego() {
   textoRonda.textContent = "Ronda " + (ronda + 1) + " de " + totalRondas;
   estadoPartida.textContent = datosPartida.revelado ? "Precio revelado" : "Adivinando";
 
-  casaActual.innerHTML = `
-    <h2>${casa.titulo}</h2>
-    <div class="dato"><strong>Ciudad</strong><span>${casa.ciudad}</span></div>
-    <div class="dato"><strong>Zona</strong><span>${casa.zona}</span></div>
-    <div class="dato"><strong>Metros</strong><span>${casa.metros} m²</span></div>
-    <div class="dato"><strong>Habitaciones</strong><span>${casa.habitaciones}</span></div>
-    <div class="dato"><strong>Baños</strong><span>${casa.banos}</span></div>
-    <div class="dato"><strong>Planta</strong><span>${casa.planta}</span></div>
-    <div class="dato"><strong>Extras</strong><span>${casa.extras}</span></div>
+  productoActual.innerHTML = `
+    <article class="anuncio">
+      <div class="anuncio-img" style="--color1:${producto.color1}; --color2:${producto.color2};">
+        <div class="badge">${producto.estado}</div>
+        <div class="badge badge-derecha">${producto.zona}</div>
+        <div class="emoji-producto">${producto.emoji}</div>
+      </div>
+
+      <div class="anuncio-body">
+        <h2>${producto.titulo}</h2>
+        <p class="descripcion">${producto.descripcion}</p>
+
+        <div class="dato"><strong>Categoría</strong><span>${producto.tipo}</span></div>
+        <div class="dato"><strong>Estado</strong><span>${producto.estado}</span></div>
+        <div class="dato"><strong>Antigüedad</strong><span>${producto.antiguedad} años</span></div>
+        <div class="dato"><strong>Zona</strong><span>${producto.zona}</span></div>
+        <div class="dato"><strong>Detalle</strong><span>${producto.detalle1}</span></div>
+        <div class="dato"><strong>Incluye</strong><span>${producto.extra}</span></div>
+      </div>
+    </article>
   `;
 
   const apuestasRonda = datosPartida.apuestas?.[ronda] || {};
@@ -673,7 +564,7 @@ btnRevelarPrecio.addEventListener("click", async () => {
   const ronda = datosPartida.rondaActual;
   const jugadores = datosPartida.jugadores || {};
   const apuestasRonda = datosPartida.apuestas?.[ronda] || {};
-  const casa = casas[ronda];
+  const producto = datosPartida.productos?.[ronda];
 
   const resultados = Object.entries(jugadores)
     .map(([id, jugador]) => {
@@ -693,7 +584,7 @@ btnRevelarPrecio.addEventListener("click", async () => {
         id,
         nombre: jugador.nombre,
         apuesta,
-        diferencia: Math.abs(apuesta - casa.precio),
+        diferencia: Math.abs(apuesta - producto.precio),
         puntosGanados: 0
       };
     })
@@ -709,7 +600,7 @@ btnRevelarPrecio.addEventListener("click", async () => {
     if (r.apuesta !== null) {
       r.puntosGanados = puntosPorPuesto[index] || 1;
 
-      if (r.apuesta === casa.precio) {
+      if (r.apuesta === producto.precio) {
         r.puntosGanados += 5;
       }
     }
@@ -730,13 +621,13 @@ btnRevelarPrecio.addEventListener("click", async () => {
 
 function pintarResultados() {
   const ronda = datosPartida.rondaActual;
-  const casa = casas[ronda];
+  const producto = datosPartida.productos?.[ronda];
   const resultados = datosPartida.resultados?.[ronda] || [];
 
   mostrar(pantallaResultados);
 
   let html = `
-    <div class="precio-real">${formatoEuros(casa.precio)}</div>
+    <div class="precio-real">${formatoEuros(producto.precio)}</div>
   `;
 
   resultados.forEach((r, index) => {
@@ -758,7 +649,7 @@ btnSiguienteRonda.addEventListener("click", async () => {
   if (!soyHost) return;
 
   const siguiente = datosPartida.rondaActual + 1;
-  const totalRondas = datosPartida.numeroRondas || casas.length;
+  const totalRondas = datosPartida.numeroRondas || 10;
 
   if (siguiente >= totalRondas) {
     await update(partidaRef(), {
