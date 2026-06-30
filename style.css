@@ -399,6 +399,72 @@ li {
   margin-right: 8px;
 }
 
+.chat-mensajes {
+  max-height: 260px;
+  overflow-y: auto;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-msg {
+  max-width: 86%;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.05);
+}
+
+.chat-msg.yo {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #dcfce7, #ecfeff);
+  border-color: #86efac;
+}
+
+.chat-nombre {
+  font-size: 12px;
+  font-weight: 1000;
+  color: var(--primary-dark);
+  margin-bottom: 3px;
+}
+
+.chat-texto {
+  font-size: 14px;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.chat-hora {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+}
+
+.chat-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.chat-form input {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-form button {
+  width: auto;
+  min-width: 92px;
+  margin-top: 0;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
 @media (max-width: 380px) {
   .app {
     padding: 12px;
@@ -423,5 +489,13 @@ li {
 
   .dato {
     font-size: 14px;
+  }
+
+  .chat-form {
+    flex-direction: column;
+  }
+
+  .chat-form button {
+    width: 100%;
   }
 }
