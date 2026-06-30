@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adivina Casa</title>
+  <title>Wallapop Quiz</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="app">
     <header>
-      <h1>Adivina Casa</h1>
-      <p>El juego de adivinar precios de viviendas en la zona sur de Madrid</p>
+      <div class="logo">💸</div>
+      <h1>Wallapop Quiz</h1>
+      <p>Adivina cuánto cuesta este anuncio de segunda mano</p>
     </header>
 
     <section id="pantalla-inicio" class="card">
@@ -20,7 +21,7 @@
       <input id="nombreJugador" type="text" placeholder="Ej: Jorge" />
 
       <label>Código de partida</label>
-      <input id="codigoPartida" type="text" placeholder="Ej: CASA123" />
+      <input id="codigoPartida" type="text" placeholder="Ej: WALLA123" />
 
       <button id="btnCrearPartida">Crear partida</button>
       <button id="btnUnirsePartida" class="secundario">Unirse a partida</button>
@@ -41,9 +42,9 @@
 
       <div id="configHost" class="oculto">
         <label>Número de rondas</label>
-        <input id="inputNumeroRondas" type="number" min="1" max="30" value="10" />
+        <input id="inputNumeroRondas" type="number" min="1" max="50" value="10" />
         <p class="nota">
-          Puedes elegir entre 1 y 30 rondas para esta partida.
+          El juego generará automáticamente los anuncios de esta partida.
         </p>
         <button id="btnEmpezarPartida">Empezar partida</button>
       </div>
@@ -55,11 +56,11 @@
         <span id="estadoPartida"></span>
       </div>
 
-      <div id="casaActual" class="casa"></div>
+      <div id="productoActual"></div>
 
       <div id="zonaApuesta">
-        <label>¿Cuánto crees que cuesta?</label>
-        <input id="inputApuesta" type="number" placeholder="Ej: 250000" />
+        <label>¿Cuánto crees que pide?</label>
+        <input id="inputApuesta" type="number" placeholder="Ej: 120" />
         <button id="btnEnviarApuesta">Enviar apuesta</button>
       </div>
 
@@ -69,7 +70,7 @@
 
       <div id="zonaHost" class="oculto">
         <button id="btnRevelarPrecio">Revelar precio y calcular puntos</button>
-        <button id="btnSiguienteRonda" class="secundario oculto">Siguiente vivienda</button>
+        <button id="btnSiguienteRonda" class="secundario oculto">Siguiente anuncio</button>
       </div>
     </section>
 
