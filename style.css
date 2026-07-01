@@ -3,18 +3,18 @@
 }
 
 :root {
-  --bg1: #022c22;
-  --bg2: #064e3b;
+  --bg1: #111827;
+  --bg2: #312e81;
   --card: rgba(255, 255, 255, 0.94);
   --text: #0f172a;
   --muted: #64748b;
   --primary: #10b981;
   --primary-dark: #047857;
   --accent: #22d3ee;
-  --danger: #ef4444;
-  --success: #16a34a;
-  --soft: #f1f5f9;
   --line: #e2e8f0;
+  --soft: #f1f5f9;
+  --success: #16a34a;
+  --danger: #ef4444;
   --yellow: #facc15;
 }
 
@@ -25,22 +25,54 @@ body {
   color: var(--text);
   background:
     radial-gradient(circle at top left, rgba(34, 211, 238, 0.35), transparent 34%),
-    radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.5), transparent 36%),
+    radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.45), transparent 36%),
     linear-gradient(135deg, var(--bg1), var(--bg2));
   background-attachment: fixed;
 }
 
+body.theme-walla {
+  --bg1: #022c22;
+  --bg2: #064e3b;
+  --primary: #10b981;
+  --primary-dark: #047857;
+  --accent: #22d3ee;
+}
+
+body.theme-pescao {
+  --bg1: #082f49;
+  --bg2: #0369a1;
+  --primary: #0ea5e9;
+  --primary-dark: #075985;
+  --accent: #38bdf8;
+}
+
 .app {
   width: 100%;
-  max-width: 560px;
+  max-width: 580px;
   margin: 0 auto;
   padding: 18px;
 }
 
 header {
+  position: relative;
   text-align: center;
   margin: 20px 0 22px;
   color: white;
+}
+
+.btn-menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: auto;
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 999px;
+  color: white;
+  background: rgba(255,255,255,0.14);
+  box-shadow: none;
+  border: 1px solid rgba(255,255,255,0.24);
 }
 
 .logo {
@@ -65,7 +97,7 @@ header h1 {
 
 header p {
   margin: 12px auto 0;
-  max-width: 340px;
+  max-width: 360px;
   color: rgba(255, 255, 255, 0.78);
   font-size: 15px;
 }
@@ -107,7 +139,7 @@ label {
   color: #334155;
 }
 
-input {
+input, textarea {
   width: 100%;
   padding: 16px 15px;
   border: 1px solid var(--line);
@@ -115,12 +147,17 @@ input {
   font-size: 18px;
   background: white;
   outline: none;
-  box-shadow: inset 0 1px 0 rgba(15, 23, 42, 0.03);
+  font-family: inherit;
 }
 
-input:focus {
+textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+input:focus, textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.16);
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.16);
 }
 
 button {
@@ -134,6 +171,12 @@ button {
   color: #052e16;
   background: linear-gradient(135deg, #86efac, #22d3ee);
   box-shadow: 0 12px 24px rgba(16, 185, 129, 0.24);
+}
+
+body.theme-pescao button {
+  color: #082f49;
+  background: linear-gradient(135deg, #7dd3fc, #fde68a);
+  box-shadow: 0 12px 24px rgba(14, 165, 233, 0.24);
 }
 
 button:active {
@@ -161,12 +204,53 @@ button:disabled {
   line-height: 1.45;
 }
 
+.game-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  color: var(--text);
+  background: white;
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 22px rgba(15,23,42,0.08);
+}
+
+.game-card strong {
+  display: block;
+  font-size: 20px;
+}
+
+.game-card small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.game-icon {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  font-size: 30px;
+  flex: 0 0 auto;
+}
+
+.walla-card .game-icon {
+  background: #dcfce7;
+}
+
+.pescao-card .game-icon {
+  background: #dbeafe;
+}
+
 .codigo {
   font-size: 34px;
   font-weight: 1000;
   letter-spacing: 3px;
   background: linear-gradient(135deg, #ecfdf5, #ecfeff);
-  border: 1px dashed #10b981;
+  border: 1px dashed var(--primary);
   color: var(--primary-dark);
   padding: 16px;
   border-radius: 20px;
@@ -188,8 +272,6 @@ li {
   padding: 13px 14px;
   border-radius: 16px;
   font-weight: 800;
-  display: flex;
-  justify-content: space-between;
 }
 
 .fila {
@@ -209,6 +291,8 @@ li {
   font-size: 13px;
   font-weight: 900;
 }
+
+/* WALLAPOP */
 
 .anuncio {
   overflow: hidden;
@@ -230,7 +314,8 @@ li {
     linear-gradient(135deg, var(--color1), var(--color2));
 }
 
-.anuncio-img::before {
+.anuncio-img::before,
+.mar-card::before {
   content: "";
   position: absolute;
   width: 180px;
@@ -241,7 +326,8 @@ li {
   right: -46px;
 }
 
-.anuncio-img::after {
+.anuncio-img::after,
+.mar-card::after {
   content: "";
   position: absolute;
   width: 130px;
@@ -270,7 +356,6 @@ li {
   color: #0f172a;
   font-size: 13px;
   font-weight: 1000;
-  backdrop-filter: blur(12px);
 }
 
 .badge-derecha {
@@ -322,7 +407,8 @@ li {
   content: "💰 ";
 }
 
-#zonaEspera {
+#zonaEsperaWalla,
+.espera-box {
   background: #ecfeff;
   border: 1px solid #a5f3fc;
   border-radius: 20px;
@@ -330,11 +416,6 @@ li {
   color: #155e75;
   font-weight: 800;
   text-align: center;
-}
-
-#zonaHost {
-  margin-top: 14px;
-  padding-top: 4px;
 }
 
 .precio-real {
@@ -371,6 +452,122 @@ li {
   background: linear-gradient(135deg, #fef9c3, #ffffff);
 }
 
+/* CHAO PESCAO */
+
+.mar-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  padding: 22px;
+  color: white;
+  background:
+    radial-gradient(circle at top left, rgba(186, 230, 253, 0.45), transparent 30%),
+    linear-gradient(135deg, #0284c7, #075985);
+  box-shadow: 0 16px 36px rgba(8, 47, 73, 0.22);
+  margin-bottom: 16px;
+}
+
+.mar-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.mar-card h2 {
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+
+.mar-categoria {
+  display: inline-flex;
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  font-size: 13px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.rol-box {
+  border-radius: 24px;
+  padding: 18px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+  background: white;
+}
+
+.rol-pescador {
+  border-color: #facc15;
+  background: linear-gradient(135deg, #fef3c7, #ffffff);
+}
+
+.rol-azul {
+  border-color: #38bdf8;
+  background: linear-gradient(135deg, #dbeafe, #ffffff);
+}
+
+.rol-rojo {
+  border-color: #fca5a5;
+  background: linear-gradient(135deg, #fee2e2, #ffffff);
+}
+
+.rol-box h3 {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+.respuesta-real {
+  background: #eff6ff;
+  border: 1px dashed #38bdf8;
+  border-radius: 18px;
+  padding: 14px;
+  margin: 12px 0;
+  font-weight: 900;
+  color: #075985;
+}
+
+.respuestas-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.respuesta-card {
+  width: 100%;
+  text-align: left;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px;
+  color: var(--text);
+  box-shadow: 0 8px 18px rgba(15,23,42,0.06);
+}
+
+.respuesta-card.abierta {
+  box-shadow: none;
+}
+
+.respuesta-card.real {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, #fee2e2, #ffffff);
+}
+
+.respuesta-card.falsa {
+  border-color: #22c55e;
+  background: linear-gradient(135deg, #dcfce7, #ffffff);
+}
+
+.respuesta-card strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.chao {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 1000;
+  color: #dc2626;
+  margin: 10px 0;
+}
+
 #ranking {
   padding: 0;
   margin: 0;
@@ -398,6 +595,8 @@ li {
   content: "👑";
   margin-right: 8px;
 }
+
+/* CHAT */
 
 .chat-mensajes {
   max-height: 260px;
@@ -465,7 +664,7 @@ li {
   padding-right: 14px;
 }
 
-@media (max-width: 380px) {
+@media (max-width: 390px) {
   .app {
     padding: 12px;
   }
@@ -485,10 +684,6 @@ li {
 
   .emoji-producto {
     font-size: 82px;
-  }
-
-  .dato {
-    font-size: 14px;
   }
 
   .chat-form {
