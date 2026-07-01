@@ -3,25 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wallapop Quiz</title>
+  <title>Party Games</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="app">
+  <main id="app" class="app theme-party">
     <header>
-      <div class="logo">💸</div>
-      <h1>Wallapop Quiz</h1>
-      <p>Adivina cuánto cuesta este anuncio de segunda mano</p>
+      <button id="btnVolverMenu" class="btn-menu oculto">← Menú</button>
+      <div id="logoApp" class="logo">🎉</div>
+      <h1 id="tituloApp">Party Games</h1>
+      <p id="subtituloApp">Juegos rápidos para móviles, amigos y risas</p>
     </header>
 
-    <section id="pantalla-inicio" class="card">
-      <h2>Entrar a una partida</h2>
+    <section id="pantalla-landing" class="card">
+      <h2>Elige un juego</h2>
+
+      <button id="btnElegirWallapop" class="game-card walla-card">
+        <span class="game-icon">💸</span>
+        <span>
+          <strong>Wallapop Quiz</strong>
+          <small>Adivina precios de anuncios inventados</small>
+        </span>
+      </button>
+
+      <button id="btnElegirPescao" class="game-card pescao-card">
+        <span class="game-icon">🎣</span>
+        <span>
+          <strong>Chao Pescao</strong>
+          <small>Farolea respuestas y evita la real</small>
+        </span>
+      </button>
+    </section>
+
+    <section id="pantalla-inicio" class="card oculto">
+      <h2 id="tituloEntrada">Entrar a una partida</h2>
 
       <label>Tu nombre</label>
       <input id="nombreJugador" type="text" placeholder="Ej: Jorge" />
 
       <label>Código de partida</label>
-      <input id="codigoPartida" type="text" placeholder="Ej: WALLA123" />
+      <input id="codigoPartida" type="text" placeholder="Ej: PARTY123" />
 
       <button id="btnCrearPartida">Crear partida</button>
       <button id="btnUnirsePartida" class="secundario">Unirse a partida</button>
@@ -41,19 +62,32 @@
       <ul id="listaJugadores"></ul>
 
       <div id="configHost" class="oculto">
-        <label>Número de rondas</label>
-        <input id="inputNumeroRondas" type="number" min="1" max="50" value="10" />
-        <p class="nota">
-          El juego generará automáticamente los anuncios de esta partida.
-        </p>
+        <div id="configWallapop" class="oculto">
+          <label>Número de rondas</label>
+          <input id="inputNumeroRondasWalla" type="number" min="1" max="50" value="10" />
+          <p class="nota">El juego generará automáticamente los anuncios.</p>
+        </div>
+
+        <div id="configPescao" class="oculto">
+          <label>Número de rondas</label>
+          <input id="inputNumeroRondasPescao" type="number" min="1" max="50" value="8" />
+
+          <label>Máximo de jugadores</label>
+          <input id="inputMaxJugadores" type="number" min="3" max="30" value="10" />
+
+          <p class="nota">
+            Mínimo recomendado: 3 jugadores. El pescador rota automáticamente.
+          </p>
+        </div>
+
         <button id="btnEmpezarPartida">Empezar partida</button>
       </div>
     </section>
 
-    <section id="pantalla-juego" class="card oculto">
+    <section id="pantalla-wallapop" class="card oculto">
       <div class="fila">
-        <span id="textoRonda"></span>
-        <span id="estadoPartida"></span>
+        <span id="textoRondaWalla"></span>
+        <span id="estadoPartidaWalla"></span>
       </div>
 
       <div id="productoActual"></div>
@@ -64,13 +98,28 @@
         <button id="btnEnviarApuesta">Enviar apuesta</button>
       </div>
 
-      <div id="zonaEspera" class="oculto">
+      <div id="zonaEsperaWalla" class="oculto">
         <p>Esperando al resto de jugadores...</p>
       </div>
 
-      <div id="zonaHost" class="oculto">
+      <div id="zonaHostWalla" class="oculto">
         <button id="btnRevelarPrecio">Revelar precio y calcular puntos</button>
-        <button id="btnSiguienteRonda" class="secundario oculto">Siguiente anuncio</button>
+        <button id="btnSiguienteRondaWalla" class="secundario oculto">Siguiente anuncio</button>
+      </div>
+    </section>
+
+    <section id="pantalla-pescao" class="card oculto">
+      <div class="fila">
+        <span id="textoRondaPescao"></span>
+        <span id="estadoPartidaPescao"></span>
+      </div>
+
+      <div id="zonaPreguntaPescao"></div>
+      <div id="zonaRolPescao"></div>
+      <div id="zonaRespuestasPescao"></div>
+
+      <div id="zonaHostPescao" class="oculto">
+        <button id="btnSiguienteRondaPescao" class="secundario oculto">Siguiente ronda</button>
       </div>
     </section>
 
